@@ -6,10 +6,12 @@ import com.teushka.orderservice.entity.Order;
 import com.teushka.orderservice.entity.OrderItem;
 import com.teushka.orderservice.repository.OrderRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
 @Service
+@Transactional
 public class OrderService {
 
     private OrderRepository orderRepository;
