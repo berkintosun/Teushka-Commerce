@@ -1,10 +1,12 @@
 package com.teushka.inventoryservice.controller;
 
+import com.teushka.inventoryservice.dto.InventoryDTO;
 import com.teushka.inventoryservice.service.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/inventory")
@@ -16,10 +18,9 @@ public class InventoryController {
         this.inventoryService = inventoryService;
     }
 
-    @GetMapping("/{skuCode}")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    @Transactional(readOnly = true)
-    public boolean isInStock(@PathVariable String skuCode){
+    public List<InventoryDTO> isInStock(@RequestParam List<String> skuCode){
         return inventoryService.isInStock(skuCode);
     }
 }
