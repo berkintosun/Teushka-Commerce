@@ -20,11 +20,11 @@ public class OrderService {
 
     private OrderRepository orderRepository;
 
-    private WebClient webClient;
+    private WebClient.Builder webClientBuilder;
 
-    public OrderService(OrderRepository orderRepository, WebClient webClient) {
+    public OrderService(OrderRepository orderRepository, WebClient.Builder webClientBuilder) {
         this.orderRepository = orderRepository;
-        this.webClient = webClient;
+        this.webClientBuilder = webClientBuilder;
     }
 
     public void placeOrder(OrderRequest orderRequest){
@@ -36,8 +36,8 @@ public class OrderService {
                 .map(this::mapToOrderItem)
                 .toList());
         List<String> skuCodes = order.getOrderItems().stream().map(OrderItem::getSkuCode).toList();
-        InventoryDTO[] inventoryDTOS = webClient.get()
-                .uri("http://127.0.0.1:8082/api/inventory",
+        InventoryDTO[] inventoryDTOS = webClientBuilder.build().get()
+                .uri("http://inventory-service/api/inventory",
                         uriBuilder -> uriBuilder.queryParam("skuCode",skuCodes).build()
                 )
                 .retrieve()
