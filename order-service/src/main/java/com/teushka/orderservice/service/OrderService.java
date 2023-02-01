@@ -5,6 +5,7 @@ import com.teushka.orderservice.dto.OrderItemDTO;
 import com.teushka.orderservice.dto.OrderRequest;
 import com.teushka.orderservice.entity.Order;
 import com.teushka.orderservice.entity.OrderItem;
+import com.teushka.orderservice.event.OrderPlacedEvent;
 import com.teushka.orderservice.repository.OrderRepository;
 import io.micrometer.tracing.Span;
 import io.micrometer.tracing.Tracer;
@@ -26,7 +27,7 @@ public class OrderService {
     private OrderRepository orderRepository;
     private WebClient.Builder webClientBuilder;
     private Tracer tracer;
-    private KafkaTemplate kafkaTemplate;
+    private KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
 
     public OrderService(OrderRepository orderRepository, WebClient.Builder webClientBuilder, Tracer tracer, KafkaTemplate kafkaTemplate) {
         this.orderRepository = orderRepository;
@@ -60,6 +61,7 @@ public class OrderService {
                 throw new IllegalArgumentException("Product is not in stock.");
             }
             orderRepository.save(order);
+            kafkaTemplate.send("notificationTopic", new OrderPlacedEvent(order.getOrderNo()));
             return "Order placed successfully";
         } finally {
             inventoryLookup.end();

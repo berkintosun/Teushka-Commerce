@@ -1,9 +1,9 @@
 package com.teushka.productservice.service;
 
+import com.teushka.productservice.repository.ProductRepository;
 import com.teushka.productservice.dto.ProductCreationReq;
 import com.teushka.productservice.dto.ProductDTO;
 import com.teushka.productservice.entity.Product;
-import com.teushka.productservice.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
